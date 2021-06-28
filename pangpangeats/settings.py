@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # installed modules
     'rest_framework',
+    'drf_spectacular',
+    # my apps
 ]
 
 MIDDLEWARE = [
@@ -69,7 +71,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pangpangeats.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -127,4 +128,10 @@ REST_FRAMEWORK = {
     'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES':
     ('rest_framework.authentication.TokenAuthentication', )
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "PANGPANG EATS API",
+    "DESCRIPTION": "PANGPANG EATS API",
+    "VERSION": "1.0.0",
 }
