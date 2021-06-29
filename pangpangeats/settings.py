@@ -123,6 +123,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # below are added by me
+STATIC_ROOT = 'pangpangeats/staticfiles'
+
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS':
     'drf_spectacular.openapi.AutoSchema',
