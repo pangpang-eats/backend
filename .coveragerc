@@ -1,0 +1,10 @@
+[run]
+omit = ./env/*
+        ./venv/*
+	   ./.vscode/*
+	   *migrations*
+       .docker-sync/*
+       volumes/*
+	   manage.py
+	   *test*
+	   *__init__.py*

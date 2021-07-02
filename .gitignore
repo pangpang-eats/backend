@@ -221,3 +221,7 @@ cython_debug/
 docker-sync.yml
 docker-compose.override.yml
 volumes/
+
+# coverage
+.coverage
+htmlcov/
