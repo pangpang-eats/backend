@@ -128,6 +128,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # below are added by me
+AUTH_USER_MODEL = 'user.User'
+
 STATIC_ROOT = 'pangpangeats/staticfiles'
 
 REST_FRAMEWORK = {
