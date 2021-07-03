@@ -1,5 +1,8 @@
 # PANGPANG-EATS BACKEND
 
+[![test & codecov](https://github.com/pangpang-eats/backend/actions/workflows/codecov.yml/badge.svg?branch=master)](https://github.com/pangpang-eats/backend/actions/workflows/codecov.yml)
+[![codecov](https://codecov.io/gh/pangpang-eats/backend/branch/master/graph/badge.svg?token=TC0BEXC75T)](https://codecov.io/gh/pangpang-eats/backend)
+
 ## 프로젝트 소개
 
 Coupang Eats의 클론 코딩, PangPang Eats의 백엔드 소스코드입니다.  
@@ -17,7 +20,8 @@ Coupang Eats의 클론 코딩, PangPang Eats의 백엔드 소스코드입니다.
 ## 기술 스택
 
 -   Language: Python3
--   Infra: AWS, Docker
+-   Framework: Django
+-   Infra: AWS, Docker, Docker Compose
 -   Database: PostgreSQL
 -   CI / CD: Github Action
 
