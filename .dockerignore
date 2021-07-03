@@ -1,0 +1,16 @@
+.coverage
+.dockerignore
+.docker-sync
+.env
+.git
+docker-compose.yml
+docker-compose.override.yml
+docker-sync.yml
+Dockerfile
+infra
+nginx
+venv
+volumes
+LICENSE
+README.md
+htmlcov
