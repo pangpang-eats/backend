@@ -3,8 +3,20 @@ name: Codecov
 on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13.3
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -13,6 +25,8 @@ jobs:
         with:
           python-version: 3.9.5
       - name: Generage coverage report
+        env:
+          POSTGRES_HOST: postgres
         run: |
           pip install --upgrade pip
           pip install coverage codecov
