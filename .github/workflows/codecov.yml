@@ -25,6 +25,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install coverage codecov
+          pip install -r requirements.txt
           coverage run manage.py test -v 3
           coverage xml
       - name: Upload coverage to Codecov
