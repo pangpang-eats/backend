@@ -3,12 +3,39 @@ version: "3"
 services:
     psql_db:
         image: postgres:13.3
-        restart: always
-        ports:
-            - 5432:5432
+        restart: "unless-stopped"
         environment:
             - POSTGRES_DB=postgres
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
         volumes:
             - ./volumes/psql_db/:/var/lib/postgresql/data
+    was:
+        build: .
+        image: "pangpangeats_was:${COMMIT}"
+        restart: "unless-stopped"
+        environment:
+            - POSTGRES_HOST=psql_db
+        depends_on:
+            - psql_db
+        expose:
+            - 8000
+        deploy:
+            restart_policy:
+                condition: on-failure
+        volumes:
+            - ./volumes/staticfiles/:/usr/src/app/pangpangeats/staticfiles
+    ws:
+        build: ./nginx
+        image: "pangpangeats_ws:${COMMIT}"
+        restart: "unless-stopped"
+        depends_on:
+            - psql_db
+            - was
+        ports:
+            - "80:80"
+        deploy:
+            restart_policy:
+                condition: on-failure
+        volumes:
+            - ./volumes/staticfiles/:/home/app/pangpangeats/staticfiles
