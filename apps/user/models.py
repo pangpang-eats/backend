@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from pangpangeats.settings import AUTH_USER_MODEL
 
 
 class UserRole(models.TextChoices):
@@ -77,3 +78,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = "pangpangeats_user"
+
+
+class CreditCard(models.Model):
+    owner = models.ForeignKey(AUTH_USER_MODEL,
+                              on_delete=models.CASCADE,
+                              null=False)
+    alias = models.CharField(max_length=100)
+    card_number = models.CharField(
+        validators=(MinLengthValidator(16), ),
+        max_length=16,
+        null=False,
+    )
+    cvc = models.CharField(
+        validators=(MinLengthValidator(3), ),
+        max_length=3,
+        null=False,
+    )
+    # both should be a future than now, but not validate them on the model, but validate them in the serializer
+    expiry_year = models.PositiveSmallIntegerField(null=False)
+    expiry_month = models.PositiveSmallIntegerField(null=False)
+
+    def __str__(self):
+        return self.card_number[:4] + "-****" * 3
