@@ -35,8 +35,6 @@ jobs:
           pip install coverage codecov
           pip install -r requirements.txt
       - name: Test and generate coverage report
-        env:
-          POSTGRES_HOST: postgres
         run: |
           coverage run manage.py test -v 3
           coverage xml
