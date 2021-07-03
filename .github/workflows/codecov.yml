@@ -12,6 +12,8 @@ jobs:
           POSTGRES_DB: postgres
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -24,13 +26,15 @@ jobs:
         uses: actions/setup-python@v2.2.2
         with:
           python-version: 3.9.5
-      - name: Generage coverage report
-        env:
-          POSTGRES_HOST: postgres
+      - name: Install required packages
         run: |
           pip install --upgrade pip
           pip install coverage codecov
           pip install -r requirements.txt
+      - name: Generage coverage report
+        env:
+          POSTGRES_HOST: postgres
+        run: |
           coverage run manage.py test -v 3
           coverage xml
       - name: Upload coverage to Codecov
