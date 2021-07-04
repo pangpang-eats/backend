@@ -99,5 +99,8 @@ class CreditCard(models.Model):
     expiry_year = models.PositiveSmallIntegerField(null=False)
     expiry_month = models.PositiveSmallIntegerField(null=False)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.card_number[:4] + "-****" * 3
