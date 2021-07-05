@@ -2,7 +2,7 @@ import typing
 from django.db import models
 from pangpangeats.settings import AUTH_USER_MODEL
 from apps.user.models import CreditCard, User
-from apps.store.models import MenuInformation
+from apps.restaurant.models import MenuInformation
 
 
 class Selection(models.Model):
