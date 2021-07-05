@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     # my apps
     'apps.user',
-    'apps.store',
+    'apps.restaurant',
     'apps.order',
 ]
 
