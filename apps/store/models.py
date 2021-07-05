@@ -30,7 +30,7 @@ class Restaurant(models.Model):
         AUTH_USER_MODEL, null=False, on_delete=models.PROTECT
     )  # the user shouldn't be deleted instead of deativation
     name = models.CharField(max_length=40, null=False)
-    picture = models.ImageField(upload_to='store_pictures', null=False)
+    picture = models.ImageField(upload_to='restaurant_pictures', null=False)
     minimum_order_cost = models.IntegerField(null=False)
     minimum_delivery_cost = models.IntegerField(null=False)
     telephone_number = models.CharField(
@@ -61,12 +61,12 @@ class Restaurant(models.Model):
 
 
 class MenuInformation(models.Model):
-    # reference store to get the user
-    store: Restaurant = models.ForeignKey(
+    # reference restaurant to get the user
+    restaurant: Restaurant = models.ForeignKey(
         Restaurant,
         null=False,
         on_delete=models.CASCADE,
-    )  # if store is gone, than the menu information should be gone, too (cascade)
+    )  # if restaurant is gone, than the menu information should be gone, too (cascade)
     name = models.CharField(max_length=20, null=False)
     description = models.CharField(max_length=100, null=False)
     picture = models.ImageField(upload_to='menu_pictures', null=False)
@@ -74,4 +74,4 @@ class MenuInformation(models.Model):
     is_available = models.BooleanField(default=True)
 
     def __str__(self):  # pragma: no cover
-        return f"{self.store.name} {self.name}"
+        return f"{self.restaurant.name} {self.name}"

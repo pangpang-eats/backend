@@ -15,7 +15,7 @@ class Selection(models.Model):
     )  # nullable becuase of on_delete option, but should required=True at the serializer
     # cascade here is not allowed to keep model Order
     # the possible cases of menu deletion are:
-    # 1. the owner deletes the store, and so as the menu (because of the cascade) -> the menu here set to null
+    # 1. the owner deletes the restaurant, and so as the menu (because of the cascade) -> the menu here set to null
     # 2. the owner deletes a menu (removing menus should be allowed) -> the menu here set to null
 
     amount = models.PositiveSmallIntegerField(default=1)
