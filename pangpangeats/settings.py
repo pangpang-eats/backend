@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # my apps
     'apps.user',
     'apps.store',
+    'apps.order',
 ]
 
 MIDDLEWARE = [
