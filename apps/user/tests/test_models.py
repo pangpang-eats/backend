@@ -8,63 +8,64 @@ class UserCreationTest(TestCase):
     def test_normal_user_creation_with_proper_phone_number_should_success(
             self):
         user = User.objects.create_user(phone_number='01012341234',
-                                        nickname='mengmota',
+                                        name='홍길동',
                                         password='thePas123Q',
                                         role=UserRole.CLIENT)
         self.assertEqual(user.phone_number, '01012341234')
-        self.assertEqual(user.nickname, 'mengmota')
+        self.assertEqual(user.name, '홍길동')
         self.assertEqual(user.role, UserRole.CLIENT)
 
     def test_user_creation_with_9_length_of_phone_number_should_success(self):
         user = User.objects.create_user(phone_number='021231234',
-                                        nickname='mengmota',
+                                        name='홍길동',
                                         password='thePas123Q',
                                         role=UserRole.CLIENT)
         self.assertEqual(user.phone_number, '021231234')
-        self.assertEqual(user.nickname, 'mengmota')
+        self.assertEqual(user.name, '홍길동')
         self.assertEqual(user.role, UserRole.CLIENT)
 
     def test_store_owner_user_creation_with_proper_phone_number_should_success(
             self):
         user = User.objects.create_user(phone_number='01012341234',
-                                        nickname='mengmota',
+                                        name='홍길동',
                                         password='thePas123Q',
                                         role=UserRole.STORE_OWNER)
         self.assertEqual(user.phone_number, '01012341234')
-        self.assertEqual(user.nickname, 'mengmota')
+        self.assertEqual(user.name, '홍길동')
         self.assertEqual(user.role, UserRole.STORE_OWNER)
 
     def test_user_creation_without_phone_number_should_fail(self):
         with self.assertRaises(ValueError):
             User.objects.create_user(phone_number=None,
-                                     nickname='mengmota',
+                                     name='홍길동',
                                      password='thePas123Q',
                                      role=UserRole.CLIENT)
 
     def test_user_creation_with_too_long_phone_number_should_fail(self):
         with self.assertRaises(DataError):
             User.objects.create_user(phone_number='123456789123',
-                                     nickname='mengmota',
+                                     name='홍길동',
                                      password='thePas123Q',
                                      role=UserRole.CLIENT)
 
     def test_user_creation_with_too_short_phone_number_should_fail(self):
         with self.assertRaises(ValidationError):
             user = User(phone_number='1',
-                        nickname='mengmota',
+                        name='홍길동',
                         password='thePas123Q',
                         role=UserRole.CLIENT)
             user.full_clean()
 
     def test_create_superuser_should_success(self):
         User.objects.create_superuser(phone_number='01012341234',
+                                      name="홍길동",
                                       password='thePas123Q')
 
 
 class CreditCardTest(TestCase):
     def test_credit_card_creation_with_new_user_should_success(self):
         user = User.objects.create_user(phone_number='01012341234',
-                                        nickname='mengmota',
+                                        name='홍길동',
                                         password='thePas123Q',
                                         role=UserRole.CLIENT)
         credit_card = CreditCard.objects.create(owner=user,
@@ -79,11 +80,10 @@ class CreditCardTest(TestCase):
         self.assertEqual(credit_card.cvc, '123')
         self.assertEqual(credit_card.expiry_year, 2032)
         self.assertEqual(credit_card.expiry_month, 12)
-        self.assertEqual(str(credit_card), "1234-****-****-****")
 
     def test_credit_card_creation_with_wrong_expiry_should_fail(self):
         user = User.objects.create_user(phone_number='01012341234',
-                                        nickname='mengmota',
+                                        name='홍길동',
                                         password='thePas123Q',
                                         role=UserRole.CLIENT)
         with self.assertRaises(ValidationError):
@@ -98,7 +98,7 @@ class CreditCardTest(TestCase):
 
     def test_credit_card_creation_with_wrong_cvc_should_fail(self):
         user = User.objects.create_user(phone_number='01012341234',
-                                        nickname='mengmota',
+                                        name='홍길동',
                                         password='thePas123Q',
                                         role=UserRole.CLIENT)
         with self.assertRaises(IntegrityError):
@@ -113,7 +113,7 @@ class CreditCardTest(TestCase):
     def test_credit_card_creation_with_wrong_card_number_should_fail(self):
         """all of the codes are the same as the upper test, but the length of card_number should be 1."""
         user = User.objects.create_user(phone_number='01012341234',
-                                        nickname='mengmota',
+                                        name='홍길동',
                                         password='thePas123Q',
                                         role=UserRole.CLIENT)
         with self.assertRaises(ValidationError):
