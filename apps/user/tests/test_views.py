@@ -1,4 +1,5 @@
 from rest_framework.test import APITestCase
+from apps.user.models import UserRole, User
 
 
 class TestUserRegistration(APITestCase):
@@ -63,3 +64,134 @@ class TestUserRegistration(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
 
+
+class TestAuthorization(APITestCase):
+    """
+    this class is about the jwt authorization
+    actually, the proccess of issuing token is all offered by the django-simplejwt module.
+    Therefore this test only tests the authorization itself works alright (the process of checking phone_number and password is working correctly)
+    """
+    def setUp(self):
+        """
+        create a sample user
+        """
+        User.objects.create_user(phone_number='021231234',
+                                 name='홍길동',
+                                 password='thePas123Q',
+                                 role=UserRole.CLIENT)
+
+    def test_issuing_token_should_success(self):
+        """
+        1. get token by sending post request to '/api/token' with phone_number and password
+        2. it should return 200 status code with jwt token
+        """
+        self.client = self.APIClient()
+        response = self.client.post(
+            '/api/token',
+            {
+                'phone_number': '01012341234',
+                'password': 'thePas123Q',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
+
+    def test_issuing_token_with_wrong_password_should_fail(self):
+        """
+        1. get token by sending post request to '/api/token' with phone_number and wrong password
+        2. it should return 400 status code
+        """
+        self.client = self.APIClient()
+        response = self.client.post(
+            '/api/token',
+            {
+                'phone_number': '01012341234',
+                'password': 'wrongPas123Q',
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_issuing_token_without_info_should_fail(self):
+        """
+        1. get token by sending post request to '/api/token' without phone_number and password
+        2. it should return 400 status code
+        """
+        self.client = self.APIClient()
+        response = self.client.post(
+            '/api/token',
+            {},
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_refreshing_token_should_success(self):
+        """
+        1. get token by sending post request to '/api/token' with phone_number and password
+        2. it should return 200 status code with jwt token
+        3. send post request to '/api/token/refresh' with jwt token
+        4. it should return 200 status code
+        """
+        self.client = self.APIClient()
+        response = self.client.post(
+            '/api/token',
+            {
+                'phone_number': '01012341234',
+                'password': 'thePas123Q',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            '/api/token/refresh',
+            {
+                'refresh': response.data['refresh'],
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_verifying_token_should_success(self):
+        """
+        1. get token by sending post request to '/api/token' with phone_number and password
+        2. it should return 200 status code with jwt token
+        3. send post request to '/api/token/verify' with jwt token
+        4. it should return 200 status code
+        """
+        self.client = self.APIClient()
+        response = self.client.post(
+            '/api/token',
+            {
+                'phone_number': '01012341234',
+                'password': 'thePas123Q',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            '/api/token/verify',
+            {
+                'token': response.data['access'],
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_verifying_token_with_wrong_token_should_fail(self):
+        """
+        1. get token by sending post request to '/api/token' with phone_number and password
+        2. it should return 200 status code with jwt token
+        3. send post request to '/api/token/verify' with wrong jwt token
+        4. it should return 400 status code
+        """
+        self.client = self.APIClient()
+        response = self.client.post(
+            '/api/token',
+            {
+                'phone_number': '01012341234',
+                'password': 'thePas123Q',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            '/api/token/verify',
+            {
+                'token': 'wrong',
+            },
+        )
+        self.assertEqual(response.status_code, 400)
