@@ -1,12 +1,13 @@
 from django.contrib import admin
-from . import models
+from apps.credit_card.models import CreditCard
+from apps.user.models import User
 
 
 class CreditCardInline(admin.StackedInline):
-    model = models.CreditCard
+    model = CreditCard
 
 
-@admin.register(models.User)
+@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('phone_number', 'name', 'role', 'date_joined')
     inlines = (CreditCardInline, )
