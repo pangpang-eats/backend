@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from pangpangeats.settings import AUTH_USER_MODEL
+from .validators import numeric_validator
 
 
 class UserRole(models.TextChoices):
@@ -96,7 +97,10 @@ class CreditCard(models.Model):
         blank=False,
     )
     cvc = models.CharField(
-        validators=(MinLengthValidator(3), ),
+        validators=(
+            MinLengthValidator(3),
+            numeric_validator,
+        ),
         max_length=3,
         null=False,
         blank=False,
