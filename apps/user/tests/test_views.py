@@ -195,3 +195,58 @@ class TestAuthorization(APITestCase):
             },
         )
         self.assertEqual(response.status_code, 400)
+
+
+class TestRetrieveUserProfile(APITestCase):
+    """
+    Test the API endpoint to retrieve the user's profile
+
+    the profile should work like:
+    1. it should contain phone_number, name, role, is_verified and date_joined fields
+    2. the password shouldn't be returned
+    3. it shouldn't be returned when the user is not authenticated
+    """
+    def setUp(self):
+        """
+        create a sample user
+        """
+        User.objects.create_user(phone_number='021231234',
+                                 name='홍길동',
+                                 password='thePas123Q',
+                                 role=UserRole.CLIENT)
+
+    def test_retrieve_profile_should_success(self):
+        """
+        1. get jwt token
+        2. using jwt token, send get request to '/api/users'
+        3. check status code
+        4. check every required fields are there
+        """
+        response = self.client.post(
+            '/api/token',
+            {
+                'phone_number': '01012341234',
+                'password': 'thePas123Q',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('token', response.data)
+        response = self.client.get(
+            '/api/users',
+            HTTP_AUTHORIZATION='Bearer ' + response.data['access'],
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('phone_number', response.data)
+        self.assertIn('name', response.data)
+        self.assertIn('role', response.data)
+        self.assertIn('is_verified', response.data)
+        self.assertIn('date_joined', response.data)
+        self.assertNotIn('password', response.data)
+
+    def test_retrieve_profile_should_fail_when_not_authenticated(self):
+        """
+        1. send get request to '/api/users'
+        2. check status code
+        """
+        response = self.client.get('/api/users', )
+        self.assertEqual(response.status_code, 401)
