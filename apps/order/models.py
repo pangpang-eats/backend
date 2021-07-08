@@ -4,9 +4,10 @@ from pangpangeats.settings import AUTH_USER_MODEL
 from apps.user.models import User
 from apps.credit_card.models import CreditCard
 from apps.restaurant.models import MenuInformation
+from apps.common.models import BaseModel
 
 
-class Selection(models.Model):
+class Selection(BaseModel):
     orderer: User = models.ForeignKey(
         AUTH_USER_MODEL, on_delete=models.PROTECT
     )  # nullable becuase of on_delete option, but should required=True at the serializer
@@ -22,14 +23,11 @@ class Selection(models.Model):
     amount = models.PositiveSmallIntegerField(default=1)
     request = models.CharField(max_length=100, null=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     def __str__(self):  # pragma: no cover
         return f"{self.orderer.name} {self.menu.name}"
 
 
-class Order(models.Model):
+class Order(BaseModel):
     # reference one of selections to get the user (in one order, the users (which is the field orderer) from the selections are the same)
     # the min length of selections should be 1
     selections: typing.List[Selection] = models.ManyToManyField(Selection)
@@ -43,9 +41,6 @@ class Order(models.Model):
     is_delivered = models.BooleanField(default=False)
 
     request = models.CharField(max_length=50, null=True, blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):  # pragma: no cover
         return f"{self.orderer.name} {self.total_cost}"
