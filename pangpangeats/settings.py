@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     # installed modules
     'rest_framework',
     'drf_spectacular',
-    'django-model-utils',
+    'model_utils',
     'safedelete',
     # my apps
     'apps.user',
