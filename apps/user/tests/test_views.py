@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from apps.common.tests import create_sample_user_and_get_token
+from apps.common.test import create_sample_user_and_get_token
 from apps.user.models import UserRole, User
 
 
