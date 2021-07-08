@@ -1,3 +1,4 @@
+from apps.common.models import BaseModel
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinLengthValidator
@@ -51,7 +52,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     objects = UserManager()
 
     phone_number = models.CharField(
@@ -74,8 +75,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-
-    date_joined = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = ['name']

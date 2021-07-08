@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django-model-utils',
+    'safedelete',
     # installed modules
     'rest_framework',
     'drf_spectacular',
