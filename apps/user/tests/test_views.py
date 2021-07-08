@@ -1,4 +1,5 @@
 from rest_framework.test import APITestCase
+from apps.common.tests import create_sample_user_and_get_token
 from apps.user.models import UserRole, User
 
 
@@ -6,15 +7,6 @@ class TestUserRegistration(APITestCase):
     ENDPOINT = '/api/users/register'
 
     def test_user_registration_should_success(self):
-        """
-        this function tests the user registration with following processes:
-        1. define client as self.APIClient
-        2. send post request to '/api/users/register' using the client, with following parameters:
-            phone_number = 01012341234
-            name = 홍길동
-            password = thePas123Q
-        """
-
         response = self.client.post(
             self.ENDPOINT,
             {
@@ -26,11 +18,6 @@ class TestUserRegistration(APITestCase):
         self.assertEqual(response.status_code, 201)
 
     def test_user_regstration_with_duplicated_phone_number_should_fail(self):
-        """
-        this function tests the user registration, whether it successfully returns 400 if the phone_number (which is unique) duplicates
-        the other conditions are the same as the upper function, but trying it for twice and check whether if the last request's response.status_code is 400
-        """
-
         response = self.client.post(
             self.ENDPOINT,
             {
@@ -51,11 +38,6 @@ class TestUserRegistration(APITestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_user_registration_with_easy_password_should_fail(self):
-        """
-        all of the conditions are the same as the function 'test_user_registration_should_success',
-        but the password should be 1234
-        """
-
         response = self.client.post(
             self.ENDPOINT,
             {
@@ -78,17 +60,12 @@ class TestAuthorization(APITestCase):
         """
         create a sample user
         """
-        User.objects.create_user(phone_number='021231234',
+        User.objects.create_user(phone_number='01012341234',
                                  name='홍길동',
                                  password='thePas123Q',
                                  role=UserRole.CLIENT)
-        self.client = self.APIClient()
 
     def test_issuing_token_should_success(self):
-        """
-        1. get token by sending post request to self.TOKEN_ENDPOINT with phone_number and password
-        2. it should return 200 status code with jwt token
-        """
         response = self.client.post(
             self.TOKEN_ENDPOINT,
             {
@@ -101,11 +78,6 @@ class TestAuthorization(APITestCase):
         self.assertIn('refresh', response.data)
 
     def test_issuing_token_with_wrong_password_should_fail(self):
-        """
-        1. get token by sending post request to self.TOKEN_ENDPOINT with phone_number and wrong password
-        2. it should return 400 status code
-        """
-
         response = self.client.post(
             self.TOKEN_ENDPOINT,
             {
@@ -113,13 +85,9 @@ class TestAuthorization(APITestCase):
                 'password': 'wrongPas123Q',
             },
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_issuing_token_without_info_should_fail(self):
-        """
-        1. get token by sending post request to self.TOKEN_ENDPOINT without phone_number and password
-        2. it should return 400 status code
-        """
         response = self.client.post(
             self.TOKEN_ENDPOINT,
             {},
@@ -127,12 +95,6 @@ class TestAuthorization(APITestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_refreshing_token_should_success(self):
-        """
-        1. get token by sending post request to self.TOKEN_ENDPOINT with phone_number and password
-        2. it should return 200 status code with jwt token
-        3. send post request to '/api/token/refresh' with jwt token
-        4. it should return 200 status code
-        """
         response = self.client.post(
             self.TOKEN_ENDPOINT,
             {
@@ -150,12 +112,6 @@ class TestAuthorization(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_verifying_token_should_success(self):
-        """
-        1. get token by sending post request to self.TOKEN_ENDPOINT with phone_number and password
-        2. it should return 200 status code with jwt token
-        3. send post request to '/api/token/verify' with jwt token
-        4. it should return 200 status code
-        """
         response = self.client.post(
             self.TOKEN_ENDPOINT,
             {
@@ -173,12 +129,6 @@ class TestAuthorization(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_verifying_token_with_wrong_token_should_fail(self):
-        """
-        1. get token by sending post request to self.TOKEN_ENDPOINT with phone_number and password
-        2. it should return 200 status code with jwt token
-        3. send post request to '/api/token/verify' with wrong jwt token
-        4. it should return 400 status code
-        """
         response = self.client.post(
             self.TOKEN_ENDPOINT,
             {
@@ -193,10 +143,12 @@ class TestAuthorization(APITestCase):
                 'token': 'wrong',
             },
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
 
 class TestRetrieveUserProfile(APITestCase):
+    ENDPOINT = '/api/users'
+    token: str
     """
     Test the API endpoint to retrieve the user's profile
 
@@ -209,31 +161,13 @@ class TestRetrieveUserProfile(APITestCase):
         """
         create a sample user
         """
-        User.objects.create_user(phone_number='021231234',
-                                 name='홍길동',
-                                 password='thePas123Q',
-                                 role=UserRole.CLIENT)
-        self.client = self.APIClient()
+        _, self.token = create_sample_user_and_get_token(
+            self.client, '01012341234')
 
     def test_retrieve_profile_should_success(self):
-        """
-        1. get jwt token
-        2. using jwt token, send get request to '/api/users'
-        3. check status code
-        4. check every required fields are there
-        """
-        response = self.client.post(
-            self.TOKEN_ENDPOINT,
-            {
-                'phone_number': '01012341234',
-                'password': 'thePas123Q',
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('token', response.data)
         response = self.client.get(
-            '/api/users',
-            HTTP_AUTHORIZATION='Bearer ' + response.data['access'],
+            self.ENDPOINT,
+            HTTP_AUTHORIZATION='Bearer ' + self.token,
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn('phone_number', response.data)
@@ -244,9 +178,5 @@ class TestRetrieveUserProfile(APITestCase):
         self.assertNotIn('password', response.data)
 
     def test_retrieve_profile_should_fail_when_not_authenticated(self):
-        """
-        1. send get request to '/api/users'
-        2. check status code
-        """
-        response = self.client.get('/api/users', )
+        response = self.client.get(self.ENDPOINT, )
         self.assertEqual(response.status_code, 401)
