@@ -1,9 +1,10 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 from pangpangeats.settings import AUTH_USER_MODEL
+from apps.common.models import BaseModel
 
 
-class Location(models.Model):
+class Location(BaseModel):
     address = models.CharField(max_length=40, null=False)
     latitude = models.FloatField(null=False)
     longitude = models.FloatField(null=False)
@@ -12,7 +13,7 @@ class Location(models.Model):
         return self.address
 
 
-class BusinessInformation(models.Model):
+class BusinessInformation(BaseModel):
     owner_name = models.CharField(max_length=5, null=False)
     business_name = models.CharField(max_length=40, null=False)
     business_registration_number = models.CharField(
@@ -25,7 +26,7 @@ class BusinessInformation(models.Model):
         return self.business_name
 
 
-class Restaurant(models.Model):
+class Restaurant(BaseModel):
     owner = models.ForeignKey(
         AUTH_USER_MODEL, null=False, on_delete=models.PROTECT
     )  # the user shouldn't be deleted instead of deativation
@@ -53,14 +54,11 @@ class Restaurant(models.Model):
     business_information: BusinessInformation = models.OneToOneField(
         BusinessInformation, null=False, on_delete=models.PROTECT)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     def __str__(self):  # pragma: no cover
         return f"{self.name} {self.location}"
 
 
-class MenuInformation(models.Model):
+class MenuInformation(BaseModel):
     # reference restaurant to get the user
     restaurant: Restaurant = models.ForeignKey(
         Restaurant,
