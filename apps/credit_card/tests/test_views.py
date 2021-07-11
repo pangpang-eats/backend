@@ -18,6 +18,122 @@ class TestCreditCardAssignmentView(APITestCase):
     5. the expiry_month should be between 1 and 12
     6. the expiry_year should be bigger than the current year
     """
+    def setUp(self):
+        _, self.access_token = create_sample_user_and_get_token(
+            self.client, '01012341234')
+
+    def test_assignment_should_success(self):
+        response = self.client.post(
+            self.ENDPOINT,
+            {
+                'owner_first_name': '길동',
+                'owner_last_name': '홍',
+                'alias': '홍길동의 카드',
+                'card_number': '4111111111111111',
+                'cvc': '123',
+                'expiry_year': 2024,
+                'expiry_month': 12,
+            },
+            HTTP_AUTHORIZATION='Bearer ' + self.access_token,
+        )
+        self.assertEqual(response.status_code, 201)
+
+    def test_assignment_with_wrong_card_number_should_fail(self):
+        response = self.client.post(
+            self.ENDPOINT,
+            {
+                'owner_first_name': '길동',
+                'owner_last_name': '홍',
+                'alias': '홍길동의 카드',
+                'card_number': '1234',
+                'cvc': '123',
+                'expiry_year': 2024,
+                'expiry_month': 12,
+            },
+            HTTP_AUTHORIZATION='Bearer ' + self.access_token,
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_without_token_should_fail(self):
+        response = self.client.post(
+            self.ENDPOINT,
+            {
+                'owner_first_name': '길동',
+                'owner_last_name': '홍',
+                'alias': '홍길동의 카드',
+                'card_number': '4111111111111111',
+                'cvc': '123',
+                'expiry_year': 2024,
+                'expiry_month': 12,
+            },
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_with_wrong_expiry_year_should_fail(self):
+        response = self.client.post(
+            self.ENDPOINT,
+            {
+                'owner_first_name': '길동',
+                'owner_last_name': '홍',
+                'alias': '홍길동의 카드',
+                'card_number': '4111111111111111',
+                'cvc': '123',
+                'expiry_year': 1990,
+                'expiry_month': 12,
+            },
+            HTTP_AUTHORIZATION='Bearer ' + self.access_token,
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_with_wrong_expiry_month_should_fail_1(self):
+        response = self.client.post(
+            self.ENDPOINT,
+            {
+                'owner_first_name': '길동',
+                'owner_last_name': '홍',
+                'alias': '홍길동의 카드',
+                'card_number': '4111111111111111',
+                'cvc': '123',
+                'expiry_year': 2024,
+                'expiry_month': 13,
+            },
+            HTTP_AUTHORIZATION='Bearer ' + self.access_token,
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_with_wrong_expiry_month_should_fail_2(self):
+        response = self.client.post(
+            self.ENDPOINT,
+            {
+                'owner_first_name': '길동',
+                'owner_last_name': '홍',
+                'alias': '홍길동의 카드',
+                'card_number': '4111111111111111',
+                'cvc': '123',
+                'expiry_year': 2024,
+                'expiry_month': -1,
+            },
+            HTTP_AUTHORIZATION='Bearer ' + self.access_token,
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_with_wrong_cvc_should_fail(self):
+        response = self.client.post(
+            self.ENDPOINT,
+            {
+                'owner_first_name': '길동',
+                'owner_last_name': '홍',
+                'alias': '홍길동의 카드',
+                'card_number': '4111111111111111',
+                'cvc': 'abc',
+                'expiry_year': 2024,
+                'expiry_month': 12,
+            },
+            HTTP_AUTHORIZATION='Bearer ' + self.access_token,
+        )
+        self.assertEqual(response.status_code, 400)
+
+
 class TestCreditCardView(APITestCase):
     ENDPOINT = '/api/credit-cards'
     user1: User
