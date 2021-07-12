@@ -16,3 +16,17 @@ class CreditCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditCard
         fields = ('owner', 'owner_first_name', 'owner_last_name', 'alias', 'card_number', 'cvc', 'expiry_year', 'expiry_month')
+
+class CreditCardUpdateSerializer(serializers.ModelSerializer):
+    owner = serializers.CharField(read_only=True)
+    owner_first_name = serializers.CharField(read_only=True)
+    owner_last_name = serializers.CharField(read_only=True)
+    alias = serializers.CharField(max_length=100, required=True)
+    card_number = serializers.CharField(read_only=True)
+    cvc = serializers.CharField(read_only=True)
+    expiry_year = serializers.IntegerField(read_only=True)
+    expiry_month = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = CreditCard
+        fields = ('owner', 'owner_first_name', 'owner_last_name', 'alias', 'card_number', 'cvc', 'expiry_year', 'expiry_month')
