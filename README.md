@@ -1,7 +1,9 @@
 # PANGPANG-EATS BACKEND
 
-[![test & codecov](https://github.com/pangpang-eats/backend/actions/workflows/codecov.yml/badge.svg?branch=master)](https://github.com/pangpang-eats/backend/actions/workflows/codecov.yml)
-[![codecov](https://codecov.io/gh/pangpang-eats/backend/branch/master/graph/badge.svg?token=TC0BEXC75T)](https://codecov.io/gh/pangpang-eats/backend)
+| master                                                                                                                                                        | develop                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![test](https://github.com/pangpang-eats/backend/actions/workflows/test.yml/badge.svg)](https://github.com/pangpang-eats/backend/actions/workflows/test.yml) | [![test](https://github.com/pangpang-eats/backend/actions/workflows/test.yml/badge.svg?branch=develop)](https://github.com/pangpang-eats/backend/actions/workflows/test.yml) |
+| [![codecov](https://codecov.io/gh/pangpang-eats/backend/branch/master/graph/badge.svg?token=TC0BEXC75T)](https://codecov.io/gh/pangpang-eats/backend)         | [![codecov](https://codecov.io/gh/pangpang-eats/backend/branch/develop/graph/badge.svg?token=TC0BEXC75T)](https://codecov.io/gh/pangpang-eats/backend)                       |
 
 ## 프로젝트 소개
 
