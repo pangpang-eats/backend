@@ -46,3 +46,10 @@ jobs:
                   name: codecov-pangpangeats
                   fail_ci_if_error: true
                   verbose: true
+            - name: Github Checks
+              uses: LouisBrunner/checks-action@v1.1.1
+              if: always()
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  name: Django Test
+                  conclusion: ${{ job.status }}
