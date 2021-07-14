@@ -1,9 +1,10 @@
 # PANGPANG-EATS BACKEND
 
-| master                                                                                                                                                        | develop                                                                                                                                                                      |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| master | develop |
+| ----- | ------ |
 | [![test](https://github.com/pangpang-eats/backend/actions/workflows/test.yml/badge.svg)](https://github.com/pangpang-eats/backend/actions/workflows/test.yml) | [![test](https://github.com/pangpang-eats/backend/actions/workflows/test.yml/badge.svg?branch=develop)](https://github.com/pangpang-eats/backend/actions/workflows/test.yml) |
-| [![codecov](https://codecov.io/gh/pangpang-eats/backend/branch/master/graph/badge.svg?token=TC0BEXC75T)](https://codecov.io/gh/pangpang-eats/backend)         | [![codecov](https://codecov.io/gh/pangpang-eats/backend/branch/develop/graph/badge.svg?token=TC0BEXC75T)](https://codecov.io/gh/pangpang-eats/backend)                       |
+| [![codecov](https://codecov.io/gh/pangpang-eats/backend/branch/master/graph/badge.svg?token=TC0BEXC75T)](https://codecov.io/gh/pangpang-eats/backend) | [![codecov](https://codecov.io/gh/pangpang-eats/backend/branch/develop/graph/badge.svg?token=TC0BEXC75T)](https://codecov.io/gh/pangpang-eats/backend) |
+| [![CodeFactor](https://www.codefactor.io/repository/github/pangpang-eats/backend/badge)](https://www.codefactor.io/repository/github/pangpang-eats/backend) | [![CodeFactor](https://www.codefactor.io/repository/github/pangpang-eats/backend/badge/develop)](https://www.codefactor.io/repository/github/pangpang-eats/backend/overview/develop) |
 
 ## 프로젝트 소개
 
