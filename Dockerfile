@@ -4,14 +4,15 @@ WORKDIR /usr/src/app
 
 ENV PYTHONBUFFERED 1
 
+
 # install dependencies
-RUN pip install --upgrade pip
 COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip;\
+    pip install -r --no-cache-dir requirements.txt
 
 # copy source code
 COPY . .
-RUN chmod +x migrate_and_execute.sh
-RUN python manage.py collectstatic --noinput
+RUN chmod +x migrate_and_execute.sh;\
+    python manage.py collectstatic --noinput
 
 CMD [ "sh", "migrate_and_execute.sh"]
