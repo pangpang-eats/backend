@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'model_utils',
     'safedelete',
+    'nested_inline',
     # my apps
     'apps.user',
     'apps.credit_card',
