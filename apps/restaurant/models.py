@@ -4,28 +4,6 @@ from pangpangeats.settings import AUTH_USER_MODEL
 from apps.common.models import BaseModel
 
 
-class Location(BaseModel):
-    address = models.CharField(max_length=40, null=False)
-    latitude = models.FloatField(null=False)
-    longitude = models.FloatField(null=False)
-
-    def __str__(self):  # pragma: no cover
-        return self.address
-
-
-class BusinessInformation(BaseModel):
-    owner_name = models.CharField(max_length=5, null=False)
-    business_name = models.CharField(max_length=40, null=False)
-    business_registration_number = models.CharField(
-        validators=[MinLengthValidator(10)],
-        max_length=10,
-        null=False,
-    )
-
-    def __str__(self):  # pragma: no cover
-        return self.business_name
-
-
 class Restaurant(BaseModel):
     owner = models.ForeignKey(
         AUTH_USER_MODEL, null=False, on_delete=models.PROTECT
@@ -48,14 +26,36 @@ class Restaurant(BaseModel):
     nuturition_facts = models.TextField(null=False)
     allergens_facts = models.TextField(null=False)
 
-    location: Location = models.OneToOneField(Location,
-                                              null=False,
-                                              on_delete=models.PROTECT)
-    business_information: BusinessInformation = models.OneToOneField(
-        BusinessInformation, null=False, on_delete=models.PROTECT)
-
     def __str__(self):  # pragma: no cover
         return f"{self.name} {self.location}"
+
+
+class Location(BaseModel):
+    restaurant = models.OneToOneField(Restaurant,
+                                      null=False,
+                                      on_delete=models.CASCADE)
+    address = models.CharField(max_length=40, null=False)
+    latitude = models.FloatField(null=False)
+    longitude = models.FloatField(null=False)
+
+    def __str__(self):  # pragma: no cover
+        return self.address
+
+
+class BusinessInformation(BaseModel):
+    restaurant = models.OneToOneField(Restaurant,
+                                      null=False,
+                                      on_delete=models.CASCADE)
+    owner_name = models.CharField(max_length=5, null=False)
+    business_name = models.CharField(max_length=40, null=False)
+    business_registration_number = models.CharField(
+        validators=[MinLengthValidator(10)],
+        max_length=10,
+        null=False,
+    )
+
+    def __str__(self):  # pragma: no cover
+        return self.business_name
 
 
 class MenuInformation(BaseModel):
