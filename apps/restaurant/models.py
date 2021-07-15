@@ -9,7 +9,8 @@ class Restaurant(BaseModel):
         AUTH_USER_MODEL, null=False, on_delete=models.PROTECT
     )  # the user shouldn't be deleted instead of deativation
     name = models.CharField(max_length=40, null=False)
-    picture = models.ImageField(upload_to='restaurant_pictures', null=False)
+    picture = models.ImageField(upload_to='staticfiles/restaurant_pictures',
+                                null=False)
     minimum_order_cost = models.IntegerField(null=False)
     minimum_delivery_cost = models.IntegerField(null=False)
     telephone_number = models.CharField(
