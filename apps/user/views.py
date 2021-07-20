@@ -4,7 +4,7 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from apps.user.models import User
-from apps.user.serializers import UserRegisterSerializer, UserSerializer
+from apps.user.serializers import UserPasswordSetSerializer, UserRegisterSerializer, UserSerializer
 
 
 class UserView(viewsets.GenericViewSet):
@@ -18,6 +18,8 @@ class UserView(viewsets.GenericViewSet):
     def get_serializer_class(self):
         if self.action == 'register':
             return UserRegisterSerializer
+        if self.action == 'set_password':
+            return UserPasswordSetSerializer
         return UserSerializer
 
     def update_profile(self, user, data) -> Dict:
@@ -37,6 +39,15 @@ class UserView(viewsets.GenericViewSet):
         # if request.method == 'PATCH'
         updated_data = self.update_profile(user, request.data)
         return Response(updated_data)
+
+    @action(methods=['post'], detail=False)
+    def set_password(self, request: HttpRequest):
+        user: User = request.user
+        serializer: UserPasswordSetSerializer = self.get_serializer(
+            user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
     @action(methods=['post'], detail=False)
     def register(self, request: HttpRequest, *args, **kwargs):
