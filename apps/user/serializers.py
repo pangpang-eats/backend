@@ -33,3 +33,18 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ('phone_number', 'password', 'name', 'role', 'is_verified',
                   'date_joined')
+
+
+class UserPasswordSetSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True,
+                                     validators=(validate_password, ),
+                                     required=True)
+
+    def update(self, instance: User, validated_data: Dict):
+        instance.set_password(validated_data['password'])
+        instance.save()
+        return instance
+
+    class Meta:
+        model = User
+        fields = ('password', )
