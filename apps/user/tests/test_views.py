@@ -48,6 +48,16 @@ class TestUserRegistration(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
 
+    def test_user_registration_without_password_should_fail(self):
+        response = self.client.post(
+            self.ENDPOINT,
+            {
+                'phone_number': '01012341234',
+                'name': '홍길동',
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+
 
 class TestAuthorization(APITestCase):
     TOKEN_ENDPOINT = '/api/token'
@@ -203,7 +213,7 @@ class TestRetrieveUserProfile(APITestCase):
         self.assertEqual(response.status_code, 401)
 
 
-class TesModifyingtUserProfile(APITestCase):
+class TestModifyingtUserProfile(APITestCase):
     ENDPOINT = '/api/users/profile'
 
     user: User
@@ -229,3 +239,31 @@ class TesModifyingtUserProfile(APITestCase):
                                      HTTP_AUTHORIZATION="Bearer " + self.token)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['phone_number'], original_phone_number)
+
+
+class TestSettingUserPassword(APITestCase):
+    ENDPOINT = '/api/users/set_password'
+
+    user: User
+    token: str
+
+    def setUp(self):
+        """
+        create a sample user
+        """
+        self.user, self.token = create_sample_user_and_get_token(
+            self.client, '01012341234')
+
+    def test_set_password_should_success(self):
+        password = 'thetheAMZp@ss!'
+        response = self.client.post(self.ENDPOINT, {'password': password},
+                                    HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            '/api/token',
+            {
+                'phone_number': self.user.phone_number,
+                'password': password,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
