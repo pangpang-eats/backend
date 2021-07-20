@@ -34,9 +34,9 @@ class UserView(viewsets.GenericViewSet):
         if request.method == 'GET':  # return user's profile
             serializer: UserSerializer = self.get_serializer(user)
             return Response(serializer.data)
-        elif request.method == 'PATCH':  # update and return one's updated user profile
-            updated_data = self.update_profile(user, request.data)
-            return Response(updated_data)
+        # if request.method == 'PATCH'
+        updated_data = self.update_profile(user, request.data)
+        return Response(updated_data)
 
     @action(methods=['post'], detail=False)
     def register(self, request: HttpRequest, *args, **kwargs):
