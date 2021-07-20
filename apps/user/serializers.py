@@ -4,6 +4,19 @@ from rest_framework import serializers
 from apps.user.models import User, UserRole
 
 
+class UserSerializer(serializers.ModelSerializer):
+    # UserSerializer is for updating or reading user
+    phone_number = serializers.CharField(read_only=True)
+    name = serializers.CharField(max_length=10, required=True)
+    role = serializers.CharField(read_only=True)
+    is_verified = serializers.BooleanField(read_only=True)
+    date_joined = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('phone_number', 'name', 'role', 'is_verified', 'date_joined')
+
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True,
                                      validators=(validate_password, ))
@@ -20,16 +33,3 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ('phone_number', 'password', 'name', 'role', 'is_verified',
                   'date_joined')
-
-
-class UserSerializer(serializers.ModelSerializer):
-    # UserSerializer is for updating or reading user
-    phone_number = serializers.CharField(read_only=True)
-    name = serializers.CharField(max_length=10, required=True)
-    role = serializers.CharField(read_only=True)
-    is_verified = serializers.BooleanField(read_only=True)
-    date_joined = serializers.DateTimeField(read_only=True)
-
-    class Meta:
-        model = User
-        fields = ('phone_number', 'name', 'role', 'is_verified', 'date_joined')
