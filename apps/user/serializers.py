@@ -4,7 +4,7 @@ from rest_framework import serializers
 from apps.user.models import User, UserRole
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True,
                                      validators=(validate_password, ))
     role = serializers.ChoiceField(read_only=True, choices=UserRole.choices)
