@@ -201,3 +201,31 @@ class TestRetrieveUserProfile(APITestCase):
     def test_retrieve_profile_should_fail_when_not_authenticated(self):
         response = self.client.get(self.ENDPOINT, )
         self.assertEqual(response.status_code, 401)
+
+
+class TesModifyingtUserProfile(APITestCase):
+    ENDPOINT = '/api/users/profile'
+
+    user: User
+    token: str
+
+    def setUp(self):
+        """
+        create a sample user
+        """
+        self.user, self.token = create_sample_user_and_get_token(
+            self.client, '01012341234')
+
+    def test_modifying_name_should_success(self):
+        response = self.client.patch(self.ENDPOINT, {'name': '이지은'},
+                                     HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['name'], "이지은")
+
+    def test_modifying_phone_number_has_no_effect(self):
+        original_phone_number = self.user.phone_number
+        response = self.client.patch(self.ENDPOINT,
+                                     {'phone_number': '01010101234'},
+                                     HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['phone_number'], original_phone_number)
