@@ -168,7 +168,7 @@ class TestAuthorization(APITestCase):
 
 
 class TestRetrieveUserProfile(APITestCase):
-    ENDPOINT = '/api/users'
+    ENDPOINT = '/api/users/profile'
     token: str
     """
     Test the API endpoint to retrieve the user's profile
