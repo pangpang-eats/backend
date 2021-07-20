@@ -77,6 +77,27 @@ class TestAuthorization(APITestCase):
         self.assertIn('access', response.data)
         self.assertIn('refresh', response.data)
 
+    def test_registered_user_issuing_should_success(self):
+        response = self.client.post(
+            '/api/users/register',
+            {
+                'phone_number': '01043211234',
+                'name': '홍길동',
+                'password': 'thePas123Q',
+            },
+        )
+        self.assertEqual(response.status_code, 201)
+        response = self.client.post(
+            self.TOKEN_ENDPOINT,
+            {
+                'phone_number': '01043211234',
+                'password': 'thePas123Q',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
+
     def test_issuing_token_with_wrong_password_should_fail(self):
         response = self.client.post(
             self.TOKEN_ENDPOINT,
